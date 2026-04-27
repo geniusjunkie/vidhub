@@ -4,6 +4,8 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import SessionProvider from '@/components/SessionProvider'
 
+export const dynamic = 'force-dynamic'
+
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata: Metadata = {
