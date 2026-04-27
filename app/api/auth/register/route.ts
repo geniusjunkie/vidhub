@@ -1,30 +1,17 @@
 import { NextResponse } from 'next/server'
-import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
-import { z } from 'zod'
-
-const schema = z.object({
-  name: z.string().min(2).max(60),
-  email: z.string().email(),
-  password: z.string().min(8),
-})
+import bcrypt from 'bcryptjs'
 
 export async function POST(req: Request) {
-  try {
-    const body = await req.json()
-    const { name, email, password } = schema.parse(body)
+  const { name, email, password } = await req.json()
+  if (!name || !email || !password) return NextResponse.json({ error: 'All fields required' }, { status: 400 })
+  if (password.length < 6) return NextResponse.json({ error: 'Password must be at least 6 characters' }, { status: 400 })
 
-    const existing = await prisma.user.findUnique({ where: { email } })
-    if (existing) return NextResponse.json({ error: 'Email already in use' }, { status: 409 })
+  const existing = await prisma.user.findUnique({ where: { email } })
+  if (existing) return NextResponse.json({ error: 'Email already in use' }, { status: 409 })
 
-    const hashed = await bcrypt.hash(password, 12)
-    const user = await prisma.user.create({
-      data: { name, email, password: hashed },
-    })
+  const hashed = await bcrypt.hash(password, 12)
+  await prisma.user.create({ data: { name, email, password: hashed, credits: 25 } })
 
-    return NextResponse.json({ id: user.id }, { status: 201 })
-  } catch (err) {
-    if (err instanceof z.ZodError) return NextResponse.json({ error: err.errors[0].message }, { status: 400 })
-    return NextResponse.json({ error: 'Server error' }, { status: 500 })
-  }
+  return NextResponse.json({ success: true })
 }

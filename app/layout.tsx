@@ -1,32 +1,26 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-
-const inter = Inter({ subsets: ['latin'], display: 'swap' })
 import { Toaster } from 'react-hot-toast'
-import Navbar from '@/components/Navbar'
 import SessionProvider from '@/components/SessionProvider'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
+
 export const metadata: Metadata = {
-  title: { default: 'VidHub', template: '%s | VidHub' },
-  description: 'A community platform for tech enthusiasts — share articles, ask questions, and grow together.',
-  icons: { icon: '/favicon.ico' },
+  title: { default: 'VidHub — AI Video Creation', template: '%s | VidHub' },
+  description: 'Create short-form videos with AI in seconds. Auto-clip, generate voiceovers, captions, and scripts — 4× faster.',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions)
-
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html lang="en" className={inter.className}>
       <body>
         <SessionProvider session={session}>
-          <Navbar />
-          <main className="min-h-screen bg-gray-50">
-            {children}
-          </main>
-          <Toaster position="bottom-right" />
+          {children}
+          <Toaster position="bottom-right" toastOptions={{ style: { background: '#0a1628', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' } }} />
         </SessionProvider>
       </body>
     </html>

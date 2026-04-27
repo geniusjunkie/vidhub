@@ -13,26 +13,18 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  username      String?   @unique
-  bio           String?
   password      String?
-  role          Role      @default(USER)
+  plan          Plan      @default(FREE)
+  credits       Int       @default(10)
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts      Account[]
-  sessions      Session[]
-  posts         Post[]
-  questions     Question[]
-  answers       Answer[]
-  comments      Comment[]
-  votes         Vote[]
-  postVotes     PostVote[]
-  answerVotes   AnswerVote[]
-  followers     Follow[]   @relation("following")
-  following     Follow[]   @relation("follower")
-  series        Series[]
-  bookmarks     Bookmark[]
+  accounts  Account[]
+  sessions  Session[]
+  projects  Project[]
+  outputs   Output[]
 }
 
 model Account {
@@ -48,8 +40,7 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -70,168 +61,54 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Post {
-  id          String     @id @default(cuid())
-  title       String
-  slug        String     @unique
-  content     String     @db.Text
-  excerpt     String?
-  published   Boolean    @default(false)
-  views       Int        @default(0)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  authorId    String
-  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  seriesId    String?
-  series      Series?    @relation(fields: [seriesId], references: [id])
-  tags        PostTag[]
-  comments    Comment[]
-  votes       PostVote[]
-  bookmarks   Bookmark[]
-}
-
-model Series {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  authorId    String
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  posts       Post[]
-}
-
-model Tag {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  slug        String    @unique
-  description String?
-  color       String    @default("#6366f1")
-  createdAt   DateTime  @default(now())
-
-  posts       PostTag[]
-  questions   QuestionTag[]
-}
-
-model PostTag {
-  postId String
-  tagId  String
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@id([postId, tagId])
-}
-
-model Question {
+model Project {
   id        String   @id @default(cuid())
   title     String
-  content   String   @db.Text
-  views     Int      @default(0)
-  solved    Boolean  @default(false)
+  tool      Tool
+  status    Status   @default(DRAFT)
+  content   String?  @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  authorId  String
-  author    User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  tags      QuestionTag[]
-  answers   Answer[]
-  votes     Vote[]
-  comments  Comment[]
+  userId  String
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  outputs Output[]
 }
 
-model QuestionTag {
-  questionId String
-  tagId      String
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@id([questionId, tagId])
-}
-
-model Answer {
-  id         String   @id @default(cuid())
-  content    String   @db.Text
-  accepted   Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  questionId String
-  question   Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  authorId   String
-  author     User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  votes      AnswerVote[]
-}
-
-model Comment {
-  id         String   @id @default(cuid())
-  content    String   @db.Text
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  authorId   String
-  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  postId     String?
-  post       Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  questionId String?
-  question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
-}
-
-model Vote {
-  id         String   @id @default(cuid())
-  value      Int      // 1 or -1
-  userId     String
-  questionId String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, questionId])
-}
-
-model PostVote {
-  id     String @id @default(cuid())
-  value  Int
-  userId String
-  postId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, postId])
-}
-
-model AnswerVote {
-  id       String @id @default(cuid())
-  value    Int
-  userId   String
-  answerId String
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  answer   Answer @relation(fields: [answerId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, answerId])
-}
-
-model Follow {
-  followerId  String
-  followingId String
-  follower    User   @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
-  following   User   @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-
-  @@id([followerId, followingId])
-}
-
-model Bookmark {
-  userId    String
-  postId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+model Output {
+  id        String   @id @default(cuid())
+  type      String
+  content   String   @db.Text
+  url       String?
   createdAt DateTime @default(now())
 
-  @@id([userId, postId])
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-enum Role {
-  USER
-  ADMIN
+enum Plan {
+  FREE
+  STARTER
+  CREATOR
+  BUSINESS
+}
+
+enum Tool {
+  SCRIPT
+  VOICEOVER
+  VIDEO_RANKING
+  COMMENTARY
+  IDEAS
+  IMAGE
+  TRANSCRIBER
+  CAPTIONS
+}
+
+enum Status {
+  DRAFT
+  PROCESSING
+  COMPLETE
+  FAILED
 }

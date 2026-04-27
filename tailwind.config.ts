@@ -2,42 +2,33 @@ import type { Config } from 'tailwindcss'
 
 const config: Config = {
   content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   darkMode: 'class',
   theme: {
     extend: {
       colors: {
         brand: {
-          50:  '#f0f4ff',
-          100: '#e0e9ff',
-          200: '#c7d7fe',
-          300: '#a5b8fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
+          50: '#eff6ff',
+          100: '#dbeafe',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
         },
-        accent: {
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
+        dark: {
+          900: '#050a14',
+          800: '#0a1628',
+          700: '#0f1f3d',
+          600: '#162544',
+          500: '#1e3a5f',
         },
       },
-      fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
-      },
-      typography: {
-        DEFAULT: {
-          css: {
-            maxWidth: '100%',
-            code: { color: '#6366f1' },
-          },
-        },
+      fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'hero-glow': 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59,130,246,0.3), transparent)',
       },
     },
   },
