@@ -25,19 +25,29 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-semibold text-sm mb-3">Tools</h4>
+            <h4 className="text-white font-semibold text-sm mb-3">AI Tools</h4>
             <ul className="space-y-2 text-sm text-gray-500">
-              <li><Link href="/tools/script" className="hover:text-white transition-colors">Script Generator</Link></li>
-              <li><Link href="/tools/voiceover" className="hover:text-white transition-colors">Voiceover</Link></li>
-              <li><Link href="/tools/ideas" className="hover:text-white transition-colors">Idea Generator</Link></li>
-              <li><Link href="/tools/image" className="hover:text-white transition-colors">Image Generator</Link></li>
+              <li><Link href="/ai-script-generator" className="hover:text-white transition-colors">AI Script Generator</Link></li>
+              <li><Link href="/ai-voiceover" className="hover:text-white transition-colors">AI Voiceover</Link></li>
+              <li><Link href="/video-idea-generator" className="hover:text-white transition-colors">Video Idea Generator</Link></li>
+              <li><Link href="/ai-reel-generator" className="hover:text-white transition-colors">AI Reel Generator</Link></li>
+              <li><Link href="/ai-clip-maker" className="hover:text-white transition-colors">AI Clip Maker</Link></li>
+              <li><Link href="/ai-thumbnail-maker" className="hover:text-white transition-colors">AI Thumbnail Maker</Link></li>
+              <li><Link href="/text-to-speech-for-videos" className="hover:text-white transition-colors">Text to Speech</Link></li>
+              <li><Link href="/text-to-video-ai" className="hover:text-white transition-colors">Text to Video AI</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-semibold text-sm mb-3">Company</h4>
+            <h4 className="text-white font-semibold text-sm mb-3">Platforms</h4>
             <ul className="space-y-2 text-sm text-gray-500">
+              <li><Link href="/ai-youtube-shorts-generator" className="hover:text-white transition-colors">YouTube Shorts Generator</Link></li>
+              <li><Link href="/ai-tiktok-video-generator" className="hover:text-white transition-colors">TikTok Video Generator</Link></li>
+              <li><Link href="/ai-reel-generator" className="hover:text-white transition-colors">Instagram Reels</Link></li>
+              <li><Link href="/tiktok-video-editor" className="hover:text-white transition-colors">TikTok Video Editor</Link></li>
+              <li><Link href="/youtube-shorts-editor" className="hover:text-white transition-colors">YouTube Shorts Editor</Link></li>
+              <li><Link href="/crayo-alternative" className="hover:text-white transition-colors">Crayo Alternative</Link></li>
+              <li><Link href="/viewmax-alternative" className="hover:text-white transition-colors">Viewmax Alternative</Link></li>
               <li><Link href="/login" className="hover:text-white transition-colors">Login</Link></li>
-              <li><Link href="/register" className="hover:text-white transition-colors">Sign up</Link></li>
             </ul>
           </div>
         </div>
